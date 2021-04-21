@@ -2,6 +2,7 @@ package io.github.seondongpyo.entity;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import javax.persistence.EntityManager;
@@ -10,9 +11,10 @@ import javax.persistence.Persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@DisplayName("Member 엔티티 테스트")
 class MemberTest {
 
-    EntityManagerFactory emf;
+    private EntityManagerFactory emf;
     private EntityManager em;
 
     @BeforeEach
@@ -29,6 +31,7 @@ class MemberTest {
     }
 
     @Test
+    @DisplayName("저장")
     void save() {
         // given
         Member member = new Member("memberA", 20);
@@ -46,6 +49,7 @@ class MemberTest {
     }
 
     @Test
+    @DisplayName("수정")
     void update() {
         // given
         Member member = new Member("memberA", 30);
@@ -65,6 +69,7 @@ class MemberTest {
     }
 
     @Test
+    @DisplayName("삭제")
     void delete() {
         // given
         Member member = new Member("memberA", 10);
