@@ -97,5 +97,25 @@ public class PersistenceTest {
         // then
         assertThat(member).isEqualTo(foundMember);
     }
+
+    @Test
+    @DisplayName("엔티티 수정 - 변경 감지")
+    void dirtyChecking() {
+        // given
+        Member member = new Member("memberA", 20);
+        em.persist(member);
+
+        // when
+        member.setName("memberB");
+        member.setAge(30);
+        em.flush();
+        em.clear();
+
+        Member foundMember = em.find(Member.class, member.getId());
+
+        // then
+        assertThat(foundMember.getName()).isEqualTo("memberB");
+        assertThat(foundMember.getAge()).isEqualTo(30);
+    }
     
 }
