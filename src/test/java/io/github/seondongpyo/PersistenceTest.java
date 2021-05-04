@@ -83,5 +83,19 @@ public class PersistenceTest {
         // then
         assertThat(foundMember).isNull();
     }
+
+    @Test
+    @DisplayName("영속 엔티티의 동일성 보장")
+    void equals() {
+        // given
+        Member member = new Member("memberA", 40);
+        em.persist(member);
+
+        // when
+        Member foundMember = em.find(Member.class, member.getId());
+
+        // then
+        assertThat(member).isEqualTo(foundMember);
+    }
     
 }
