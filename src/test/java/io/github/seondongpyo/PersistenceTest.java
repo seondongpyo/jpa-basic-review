@@ -10,7 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 @DisplayName("영속성 관리")
 public class PersistenceTest {
@@ -116,6 +116,34 @@ public class PersistenceTest {
         // then
         assertThat(foundMember.getName()).isEqualTo("memberB");
         assertThat(foundMember.getAge()).isEqualTo(30);
+    }
+
+    @Test
+    @DisplayName("엔티티를 준영속 상태로 만드는 방법 - em.clear()")
+    void makeDetached() {
+        // given
+        Member member = new Member("memberA", 10);
+        em.persist(member);
+
+        // when
+        em.clear();
+
+        // then
+        assertThat(em.contains(member)).isFalse();
+    }
+
+    @Test
+    @DisplayName("엔티티를 준영속 상태로 만드는 방법 - em.close()")
+    void makeDetached_2() {
+        // given
+        Member member = new Member("memberA", 20);
+        em.persist(member);
+
+        // when
+        em.close();
+
+        // then
+        assertThatIllegalStateException().isThrownBy(() -> em.contains(member));
     }
     
 }
