@@ -91,4 +91,19 @@ public class ColumnTest {
 		assertThrows(PersistenceException.class, () -> em.persist(employee));
 	}
 
+	@Test
+	@DisplayName("length : 문자열 필드의 길이 제약 조건을 설정한다. (String 타입에만 사용)")
+	void length() {
+		// given
+		Employee employee = new Employee();
+		employee.setAge(20);
+
+		// when
+		employee.setResidentNumber("900101-1234567"); // 13자리가 아닌 14자리를 입력할 경우
+		em.persist(employee);
+
+		// then
+		assertThrows(PersistenceException.class, () -> em.flush()); // 실제 DB로 쿼리가 실행될 때 예외 발생
+	}
+
 }
