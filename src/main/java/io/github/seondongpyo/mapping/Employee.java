@@ -32,7 +32,7 @@ public class Employee {
 	@Column(insertable = false)
 	private String address;
 
-	@Column(insertable = false)
+	@Column(length = 13)
 	private String residentNumber;
 
 	@Enumerated(value = EnumType.STRING)
