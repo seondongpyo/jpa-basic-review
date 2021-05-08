@@ -36,6 +36,7 @@ public class ColumnTest {
 		// given
 		Employee employee = new Employee();
 		employee.setAddress("서울특별시 송파구");
+		employee.setAge(20);
 		em.persist(employee);
 
 		em.flush();
@@ -54,6 +55,7 @@ public class ColumnTest {
 		// given
 		Employee employee = new Employee();
 		employee.setName("홍길동");
+		employee.setAge(20);
 		em.persist(employee);
 
 		em.flush();
@@ -70,5 +72,6 @@ public class ColumnTest {
 		String name = em.find(Employee.class, employee.getId()).getName();
 		assertThat(name).isEqualTo("홍길동").isNotEqualTo("김길동");
 	}
+
 
 }

@@ -27,7 +27,7 @@ public class Employee {
 	private String name;
 
 	@Column(nullable = false)
-	private int age;
+	private Integer age;
 
 	@Column(insertable = false)
 	private String address;
