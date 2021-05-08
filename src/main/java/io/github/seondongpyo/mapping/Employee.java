@@ -38,6 +38,9 @@ public class Employee {
 	@Enumerated(value = EnumType.STRING)
 	private Gender gender;
 
+	@Enumerated(value = EnumType.ORDINAL)
+	private Role role;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date joinDateTime;
 
