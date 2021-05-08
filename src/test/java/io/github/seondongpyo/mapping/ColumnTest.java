@@ -1,10 +1,12 @@
 package io.github.seondongpyo.mapping;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceException;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -73,5 +75,20 @@ public class ColumnTest {
 		assertThat(name).isEqualTo("홍길동").isNotEqualTo("김길동");
 	}
 
+	@Test
+	@DisplayName("nullable : false 설정 시 해당 필드에 매핑되는 컬럼은 not null 제약 조건이 된다.")
+	void nullable() {
+		// given
+		Employee employee = new Employee();
+
+		// when
+		// nullable = false인 age 값을 넣지 않음
+		employee.setName("홍길동");
+		employee.setAddress("서울특별시 송파구");
+		employee.setGender(Gender.MALE);
+		
+		// then
+		assertThrows(PersistenceException.class, () -> em.persist(employee));
+	}
 
 }
