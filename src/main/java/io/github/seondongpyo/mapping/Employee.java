@@ -41,8 +41,14 @@ public class Employee {
 	@Enumerated(value = EnumType.ORDINAL)
 	private Role role;
 
+	@Temporal(TemporalType.DATE)
+	private Date joinDate;
+
+	@Temporal(TemporalType.TIME)
+	private Date startWorkTime;
+
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date joinDateTime;
+	private Date lastBusinessTripDateTime;
 
 	@Lob
 	private String workHistory;
