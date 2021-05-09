@@ -1,5 +1,6 @@
 package io.github.seondongpyo.mapping;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import javax.persistence.EntityManager;
@@ -45,4 +46,24 @@ public class EntityMappingTest {
 		// then
 		assertThrows(PersistenceException.class, () -> em.find(Person.class, person.getId()));
 	}
+
+	@Test
+	@DisplayName("name 속성에 JPA에서 사용할 엔티티 이름을 지정할 수 있다.")
+	void nameAttribute() {
+		// given
+		Employee employee = new Employee();
+		employee.setName("홍길동");
+		employee.setAge(30);
+		
+		// when
+		em.persist(employee);
+		em.flush();
+		em.clear();
+
+		// then
+		Employee foundEmployee = em.createQuery("select e from EMP e", Employee.class).getSingleResult();
+		assertThat(foundEmployee.getName()).isEqualTo("홍길동");
+		assertThat(foundEmployee.getAge()).isEqualTo(30);
+	}
+
 }
