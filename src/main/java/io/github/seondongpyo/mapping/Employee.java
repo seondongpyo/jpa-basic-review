@@ -17,7 +17,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-@Entity
+@Entity(name = "EMP")
 public class Employee {
 
 	@Id @GeneratedValue
