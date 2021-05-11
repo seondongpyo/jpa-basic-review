@@ -8,6 +8,10 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 
+import io.github.seondongpyo.mapping.id.GenerateIdByIdentity;
+import io.github.seondongpyo.mapping.id.GenerateIdBySequence;
+import io.github.seondongpyo.mapping.id.GenerateIdByTable;
+import io.github.seondongpyo.mapping.id.GenerateIdByUser;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

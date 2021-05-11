@@ -8,6 +8,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 
+import io.github.seondongpyo.entity.Employee;
+import io.github.seondongpyo.entity.Gender;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

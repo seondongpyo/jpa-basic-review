@@ -1,4 +1,4 @@
-package io.github.seondongpyo.mapping;
+package io.github.seondongpyo.entity;
 
 public enum Role {
 	WORKER, MANAGER

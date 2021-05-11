@@ -1,4 +1,4 @@
-package io.github.seondongpyo.mapping;
+package io.github.seondongpyo.mapping.id;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
