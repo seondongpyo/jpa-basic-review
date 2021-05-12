@@ -1,4 +1,4 @@
-package io.github.seondongpyo.mapping.relation.unidirectional;
+package io.github.seondongpyo.mapping.relation.direction.unidirectional;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

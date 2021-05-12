@@ -1,4 +1,4 @@
-package io.github.seondongpyo.mapping.relation.bidirectional;
+package io.github.seondongpyo.mapping.relation.direction.bidirectional;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
