@@ -1,5 +1,7 @@
 package io.github.seondongpyo.mapping.relation.manytoone;
 
+import io.github.seondongpyo.mapping.relation.manytoone.bidirectional.Professor;
+import io.github.seondongpyo.mapping.relation.manytoone.bidirectional.University;
 import io.github.seondongpyo.mapping.relation.manytoone.unidirectional.School;
 import io.github.seondongpyo.mapping.relation.manytoone.unidirectional.Student;
 import org.assertj.core.api.Assertions;
@@ -34,9 +36,9 @@ public class ManyToOneTest {
 
     @DisplayName("다대일 단방향 연관관계 매핑")
     @Test
-    void manyToOne() {
+    void unidirectional() {
         // given
-        School school = new School("한국대학교");
+        School school = new School("서울고등학교");
         em.persist(school);
 
         Student student = new Student("홍길동");
@@ -50,7 +52,32 @@ public class ManyToOneTest {
         Student foundStudent = em.find(Student.class, student.getId());
 
         // then
-        assertThat(foundStudent.getSchool().getName()).isEqualTo("한국대학교");
+        assertThat(foundStudent.getSchool().getName()).isEqualTo("서울고등학교");
+    }
+
+    @DisplayName("다대일 양방향 연관관계 매핑")
+    @Test
+    void bidirectional() {
+        // given
+        University university = new University("한국대학교");
+        em.persist(university);
+
+        Professor professor = new Professor("김길동");
+        professor.appoint(university);
+        university.getProfessors().add(professor);
+        em.persist(professor);
+
+        em.flush();
+        em.clear();
+
+        // when
+        University foundUniversity = em.find(University.class, university.getId());
+        Professor foundProfessor = em.find(Professor.class, professor.getId());
+
+        // then
+        assertThat(foundUniversity.getProfessors()).hasSize(1);
+        assertThat(foundUniversity.getProfessors().get(0).getName()).isEqualTo("김길동");
+        assertThat(foundProfessor.getUniversity().getName()).isEqualTo("한국대학교");
     }
 
 }
