@@ -1,5 +1,7 @@
 package io.github.seondongpyo.mapping.relation.onetomany;
 
+import io.github.seondongpyo.mapping.relation.onetomany.bidirectional.Airplane;
+import io.github.seondongpyo.mapping.relation.onetomany.bidirectional.Airport;
 import io.github.seondongpyo.mapping.relation.onetomany.unidirectional.Car;
 import io.github.seondongpyo.mapping.relation.onetomany.unidirectional.ParkingLot;
 import org.junit.jupiter.api.AfterEach;
@@ -53,5 +55,25 @@ public class OneToManyTest {
         assertThat(foundParkingLot.getCars()).hasSize(1);
     }
 
+    @DisplayName("양방향 연관관계 매핑 - 공식적으로 지원하지 않는 방식이다.")
+    @Test
+    void bidirectional() {
+        // given
+        Airplane airplane = new Airplane("경비행기");
+        em.persist(airplane);
+
+        Airport airport = new Airport("인천국제공항");
+        airport.getAirplanes().add(airplane);
+        em.persist(airport);
+
+        em.flush();
+        em.clear();
+
+        // when
+        Airplane foundAirplane = em.find(Airplane.class, airplane.getId());
+
+        // then
+        assertThat(foundAirplane.getAirport().getId()).isEqualTo(airport.getId());
+    }
 
 }
