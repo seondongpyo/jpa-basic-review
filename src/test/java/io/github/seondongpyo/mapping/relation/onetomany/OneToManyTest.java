@@ -76,4 +76,26 @@ public class OneToManyTest {
         assertThat(foundAirplane.getAirport().getId()).isEqualTo(airport.getId());
     }
 
+    @DisplayName("양방향 연관관계 매핑 - 연관관계의 주인 쪽에 값을 세팅하지 않을 경우")
+    @Test
+    void noValueInRelationOwner() {
+        // given
+        Airplane airplane = new Airplane("비행기");
+        em.persist(airplane);
+
+        Airport airport = new Airport("공항");
+//        airport.getAirplanes().add(airplane);
+        airplane.setAirport(airport); // 연관관계의 주인이 아닌 쪽에만 값을 세팅
+        em.persist(airport);
+
+        em.flush();
+        em.clear();
+
+        // when
+        Airplane foundAirplane = em.find(Airplane.class, airplane.getId());
+
+        // then
+        assertThat(foundAirplane.getAirport()).isNull();
+    }
+
 }

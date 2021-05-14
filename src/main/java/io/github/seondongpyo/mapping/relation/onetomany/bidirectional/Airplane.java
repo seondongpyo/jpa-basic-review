@@ -2,10 +2,11 @@ package io.github.seondongpyo.mapping.relation.onetomany.bidirectional;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
-@Getter
+@Getter @Setter
 @NoArgsConstructor
 @Entity
 public class Airplane {
