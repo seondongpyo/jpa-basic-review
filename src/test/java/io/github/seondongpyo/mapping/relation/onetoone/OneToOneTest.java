@@ -2,6 +2,8 @@ package io.github.seondongpyo.mapping.relation.onetoone;
 
 import io.github.seondongpyo.mapping.relation.onetoone.unidirectional.Contact;
 import io.github.seondongpyo.mapping.relation.onetoone.unidirectional.Customer;
+import io.github.seondongpyo.mapping.relation.onetoone.unidirectional.Passport;
+import io.github.seondongpyo.mapping.relation.onetoone.unidirectional.Traveler;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -98,6 +100,27 @@ public class OneToOneTest {
 
         // then
         assertThat(foundCustomer.getContact()).isNull();
+    }
+
+    @DisplayName("양방향 연관관계 매핑 - 대상 테이블에 외래 키를 가지는 경우")
+    @Test
+    void bidirectional2() {
+        // given
+        Traveler traveler = new Traveler();
+        em.persist(traveler);
+
+        Passport passport = new Passport();
+        passport.setTraveler(traveler);
+        em.persist(passport);
+
+        em.flush();
+        em.clear();
+
+        // when
+        Passport foundPassport = em.find(Passport.class, passport.getId());
+
+        // then
+        assertThat(foundPassport.getTraveler().getId()).isEqualTo(traveler.getId());
     }
 
 }
