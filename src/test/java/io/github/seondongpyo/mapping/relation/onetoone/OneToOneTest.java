@@ -77,4 +77,27 @@ public class OneToOneTest {
         assertThat(foundContact.getCustomer().getId()).isEqualTo(customer.getId());
     }
 
+
+    @DisplayName("양방향 연관관계 매핑 - 연관관계의 주인 쪽에 값을 세팅해야 한다.")
+    @Test
+    void noValueInRelationOwner() {
+        // given
+        Contact contact = new Contact();
+        em.persist(contact);
+
+        Customer customer = new Customer();
+//        customer.setContact(contact);
+        contact.setCustomer(customer); // Contact는 연관관계의 주인이 아니다
+        em.persist(customer);
+
+        em.flush();
+        em.clear();
+
+        // when
+        Customer foundCustomer = em.find(Customer.class, customer.getId());
+
+        // then
+        assertThat(foundCustomer.getContact()).isNull();
+    }
+
 }
