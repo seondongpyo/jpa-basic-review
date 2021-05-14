@@ -4,10 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Getter @Setter
 @NoArgsConstructor
@@ -17,6 +14,10 @@ public class Contact {
     @Id @GeneratedValue
     @Column(name = "CONTACT_ID")
     private Long id;
+
+    // 양방향 연관관계 설정
+    @OneToOne(mappedBy = "contact")
+    private Customer customer;
 
     private String address;
     private String phoneNumber;

@@ -53,4 +53,28 @@ public class OneToOneTest {
         assertThat(foundCustomer.getContact().getId()).isEqualTo(contact.getId());
     }
 
+    @DisplayName("양방향 연관관계 매핑 - 주 테이블에 외래 키를 가지는 경우")
+    @Test
+    void bidirectional() {
+        // given
+        Contact contact = new Contact();
+        em.persist(contact);
+
+        Customer customer = new Customer();
+        customer.setContact(contact);
+        contact.setCustomer(customer);
+        em.persist(customer);
+
+        em.flush();
+        em.clear();
+
+        // when
+        Customer foundCustomer = em.find(Customer.class, customer.getId());
+        Contact foundContact = em.find(Contact.class, contact.getId());
+
+        // then
+        assertThat(foundCustomer.getContact().getId()).isEqualTo(contact.getId());
+        assertThat(foundContact.getCustomer().getId()).isEqualTo(customer.getId());
+    }
+
 }
