@@ -11,6 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import io.github.seondongpyo.mapping.relation.manytomany.bidirectional.Task;
+import io.github.seondongpyo.mapping.relation.manytomany.bidirectional.Worker;
 import io.github.seondongpyo.mapping.relation.manytomany.unidirectional.Bank;
 import io.github.seondongpyo.mapping.relation.manytomany.unidirectional.Client;
 
@@ -55,6 +57,37 @@ public class ManyToManyTest {
 
 		// then
 		assertThat(foundClient.getBanks()).hasSize(2);
+	}
+
+	@DisplayName("양방향 연관관계 매핑")
+	@Test
+	void bidirectional() {
+		// given
+		Task task1 = new Task("미장");
+		Task task2 = new Task("도배");
+		em.persist(task1);
+		em.persist(task2);
+
+		Worker worker1 = new Worker("작업자1");
+		Worker worker2 = new Worker("작업자2");
+		Worker worker3 = new Worker("작업자3");
+		worker1.getTasks().add(task1);
+		worker2.getTasks().add(task1);
+		worker3.getTasks().add(task2);
+		em.persist(worker1);
+		em.persist(worker2);
+		em.persist(worker3);
+
+		em.flush();
+		em.clear();
+
+		// when
+		Task foundTask1 = em.find(Task.class, task1.getId());
+		Task foundTask2 = em.find(Task.class, task2.getId());
+
+		// then
+		assertThat(foundTask1.getWorkers()).hasSize(2);
+		assertThat(foundTask2.getWorkers()).hasSize(1);
 	}
 
 }
