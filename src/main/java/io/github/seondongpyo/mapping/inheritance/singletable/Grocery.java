@@ -9,7 +9,6 @@ import javax.persistence.*;
 @Getter @Setter
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn
 @Entity
 public abstract class Grocery {
 
