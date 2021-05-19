@@ -1,4 +1,4 @@
-package io.github.seondongpyo.proxy.basic;
+package io.github.seondongpyo.proxy;
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,6 +14,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import io.github.seondongpyo.proxy.FootballPlayer;
 
 @DisplayName("프록시")
 public class ProxyBasicTest {

@@ -1,4 +1,4 @@
-package io.github.seondongpyo.proxy.basic;
+package io.github.seondongpyo.proxy;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

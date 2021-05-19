@@ -1,4 +1,4 @@
-package io.github.seondongpyo.proxy.loading;
+package io.github.seondongpyo.proxy;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -11,10 +11,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import io.github.seondongpyo.proxy.basic.BasketballClub;
-import io.github.seondongpyo.proxy.basic.BasketballPlayer;
-import io.github.seondongpyo.proxy.basic.FootballClub;
-import io.github.seondongpyo.proxy.basic.FootballPlayer;
+import io.github.seondongpyo.proxy.BasketballClub;
+import io.github.seondongpyo.proxy.BasketballPlayer;
+import io.github.seondongpyo.proxy.FootballClub;
+import io.github.seondongpyo.proxy.FootballPlayer;
 
 @DisplayName("즉시 로딩과 지연 로딩")
 public class FetchTypeTest {

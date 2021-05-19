@@ -1,4 +1,4 @@
-package io.github.seondongpyo.proxy.basic;
+package io.github.seondongpyo.proxy;
 
 import java.util.ArrayList;
 import java.util.List;
