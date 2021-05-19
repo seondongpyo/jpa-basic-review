@@ -2,6 +2,7 @@ package io.github.seondongpyo.proxy.basic;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -20,7 +21,7 @@ public class FootballPlayer {
 	@Column(name = "PLAYER_ID")
 	private Long id;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY) // 지연 로딩 설정
 	@JoinColumn(name = "CLUB_ID")
 	private FootballClub footballClub;
 
