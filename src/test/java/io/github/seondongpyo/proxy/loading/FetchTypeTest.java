@@ -11,6 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import io.github.seondongpyo.proxy.basic.BasketballClub;
+import io.github.seondongpyo.proxy.basic.BasketballPlayer;
 import io.github.seondongpyo.proxy.basic.FootballClub;
 import io.github.seondongpyo.proxy.basic.FootballPlayer;
 
@@ -52,6 +54,27 @@ public class FetchTypeTest {
 
 		// then
 		assertThat(foundPlayer.getFootballClub().getClass()).isNotEqualTo(FootballClub.class); // FootballClub 객체는 실제 엔티티가 아닌 프록시로 조회
+	}
+
+	@DisplayName("즉시 로딩 - FetchType.EAGER")
+	@Test
+	void fetchTypeEager() {
+		// given
+		BasketballClub basketballClub = new BasketballClub("LA Lakers", "Los Angeles");
+		em.persist(basketballClub);
+
+		BasketballPlayer player = new BasketballPlayer("LeBron James", "Small Forward");
+		player.setBasketballClub(basketballClub);
+		em.persist(player);
+
+		em.flush();
+		em.clear();
+
+		// when
+		BasketballPlayer foundPlayer = em.find(BasketballPlayer.class, player.getId()); // 즉시 로딩으로 설정 후 엔티티 조회
+
+		// then
+		assertThat(foundPlayer.getBasketballClub().getClass()).isEqualTo(BasketballClub.class); // BasketballClub 객체가 실제 엔티티로 조회
 	}
 
 }
