@@ -3,6 +3,8 @@ package io.github.seondongpyo.embedded;
 import static org.assertj.core.api.Assertions.*;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -188,6 +190,37 @@ public class EmbeddedTest {
 		assertThat(identityComparison).isFalse();
 		assertThat(equivalenceComparison).isTrue();
 	}
+	
+	@DisplayName("값 타입 컬렉션 사용하기")
+	@Test
+	void valueTypeCollection() {
+		// given
+		Entertainer entertainer = new Entertainer("entertainer1");
+		entertainer.setHomeAddress(new Address("city", "street", "zipcode")); // 임베디드 타입
 
+		// 값 타입 컬렉션
+		entertainer.getFavoriteDirectors().add("감독1");
+		entertainer.getFavoriteDirectors().add("감독2");
+		entertainer.getAddressHistory().add(new Address("oldCity", "oldStreet", "oldZipcode"));
+		entertainer.getAddressHistory().add(new Address("previousCity", "previousStreet", "previousZipcode"));
+
+		em.persist(entertainer);
+		em.flush();
+		em.clear();
+
+		// when
+		Entertainer foundEntertainer = em.find(Entertainer.class, entertainer.getId());
+		Address homeAddress = foundEntertainer.getHomeAddress();
+		List<Address> addressHistory = foundEntertainer.getAddressHistory(); // 지연 로딩
+		Set<String> favoriteDirectors = foundEntertainer.getFavoriteDirectors(); // 지연 로딩
+
+		// then
+		assertThat(homeAddress).isEqualTo(new Address("city", "street", "zipcode"));
+		assertThat(addressHistory).contains(
+			new Address("oldCity", "oldStreet", "oldZipcode"),
+			new Address("previousCity", "previousStreet", "previousZipcode")
+		);
+		assertThat(favoriteDirectors).contains("감독1", "감독2");
+	}
 
 }

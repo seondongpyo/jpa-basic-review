@@ -1,12 +1,20 @@
 package io.github.seondongpyo.embedded;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,5 +47,20 @@ public class Entertainer {
 		@AttributeOverride(name="zipcode", column=@Column(name = "COMPANY_ZIPCODE"))
 	})
 	private Address companyAddress;
+
+	@ElementCollection
+	@CollectionTable(
+		name = "FAVORITE_DIRECTOR",
+		joinColumns = @JoinColumn(name = "ENTERTAINER_ID")
+	)
+	@Column(name = "DIRECTOR_NAME")
+	private Set<String> favoriteDirectors = new HashSet<>();
+
+	@ElementCollection
+	@CollectionTable(
+		name = "ADDRESS",
+		joinColumns = @JoinColumn(name = "ENTERTAINER_ID")
+	)
+	private List<Address> addressHistory = new ArrayList<>();
 
 }
