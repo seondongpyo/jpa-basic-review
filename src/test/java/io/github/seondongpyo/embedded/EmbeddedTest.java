@@ -108,4 +108,37 @@ public class EmbeddedTest {
 		assertThat(companyAddress).containsOnlyNulls();
 	}
 
+	@DisplayName("값 타입은 여러 엔티티가 공유하면 안 된다.")
+	@Test
+	void valueTypeSharing() {
+		// given
+		Address address = new Address("city", "street", "zipcode");
+
+		Entertainer entertainer1 = new Entertainer("entertainer1");
+		entertainer1.setCompanyAddress(address);
+		em.persist(entertainer1);
+
+		Entertainer entertainer2 = new Entertainer("entertainer2");
+		entertainer2.setCompanyAddress(address);
+		em.persist(entertainer2);
+
+		// entertainer1의 주소 내용을 변경
+		entertainer1.getCompanyAddress().setCity("newCity");
+		entertainer1.getCompanyAddress().setStreet("newStreet");
+		entertainer1.getCompanyAddress().setZipcode("newZipcode");
+
+		em.flush();
+		em.clear();
+
+		// when
+		String selectEntertainer2Query = "select e from Entertainer e where e.name = 'entertainer2'";
+		Entertainer foundEntertainer2 = em.createQuery(selectEntertainer2Query, Entertainer.class).getSingleResult();
+
+		// then
+		assertThat(foundEntertainer2.getCompanyAddress().getCity()).isEqualTo("newCity");
+		assertThat(foundEntertainer2.getCompanyAddress().getStreet()).isEqualTo("newStreet");
+		assertThat(foundEntertainer2.getCompanyAddress().getZipcode()).isEqualTo("newZipcode");
+	}
+
+
 }
