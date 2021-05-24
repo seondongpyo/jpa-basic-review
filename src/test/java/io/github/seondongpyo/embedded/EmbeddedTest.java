@@ -173,5 +173,21 @@ public class EmbeddedTest {
 		assertThat(entertainer2Address.getZipcode()).isEqualTo("zipcode");
 	}
 
+	@DisplayName("값 타입의 비교는 equals(), hashCode()를 적절히 재정의하여 수행한다.")
+	@Test
+	void valueTypeComparison() {
+		// given
+		Address address1 = new Address("city", "street", "zipcode");
+		Address address2 = new Address("city", "street", "zipcode");
+
+		// when
+		boolean identityComparison = address1 == address2;
+		boolean equivalenceComparison = address1.equals(address2);
+
+		// then
+		assertThat(identityComparison).isFalse();
+		assertThat(equivalenceComparison).isTrue();
+	}
+
 
 }
