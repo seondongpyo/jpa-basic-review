@@ -3,6 +3,8 @@ package io.github.seondongpyo.embedded;
 import static org.assertj.core.api.Assertions.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -221,6 +223,41 @@ public class EmbeddedTest {
 			new Address("previousCity", "previousStreet", "previousZipcode")
 		);
 		assertThat(favoriteDirectors).contains("감독1", "감독2");
+	}
+
+	@DisplayName("값 타입 컬렉션은 생명주기를 엔티티에 의존한다. (like CascadeType.ALL, orphanRemoval=true)")
+	@Test
+	void valueTypeCollectionLifeCycle() {
+		// given
+		Entertainer entertainer = new Entertainer("entertainer");
+		entertainer.getAddressHistory().add(new Address("city1", "street1", "zipcode1"));
+		entertainer.getAddressHistory().add(new Address("city2", "street2", "zipcode2"));
+		entertainer.getFavoriteDirectors().add("director1");
+		entertainer.getFavoriteDirectors().add("director2");
+		entertainer.getFavoriteDirectors().add("director3");
+		em.persist(entertainer);
+
+		em.flush();
+		em.clear();
+
+		// when
+		Entertainer foundEntertainer = em.find(Entertainer.class, entertainer.getId());
+		List<Address> addressHistory1 = new ArrayList<>(foundEntertainer.getAddressHistory()); // 엔티티 제거 전 주소 이력
+		Set<String> favoriteDirectors1 = new HashSet<>(foundEntertainer.getFavoriteDirectors()); // 엔티티 제거 전 감독 목록
+
+		em.remove(foundEntertainer); // 엔티티를 제거
+		em.flush();
+		em.clear();
+
+		List addressHistory2 = em.createNativeQuery("select * from ADDRESS").getResultList(); // 엔티티 제거 후 주소 이력
+		List favoriteDirectors2 = em.createNativeQuery("select * from FAVORITE_DIRECTOR").getResultList(); // 엔티티 제거 후 감독 목록
+
+		// then
+		assertThat(addressHistory1).hasSize(2);
+		assertThat(favoriteDirectors1).hasSize(3);
+		assertThat(addressHistory2).hasSize(0);
+		assertThat(favoriteDirectors2).hasSize(0);
+
 	}
 
 }
