@@ -140,5 +140,38 @@ public class EmbeddedTest {
 		assertThat(foundEntertainer2.getCompanyAddress().getZipcode()).isEqualTo("newZipcode");
 	}
 
+	@DisplayName("값을 공유하는 대신 복사해서 사용한다.")
+	@Test
+	void valueTypeCopy() {
+		// given
+		Address address = new Address("city", "street", "zipcode");
+
+		Entertainer entertainer1 = new Entertainer("entertainer1");
+		entertainer1.setCompanyAddress(address);
+		em.persist(entertainer1);
+
+		Entertainer entertainer2 = new Entertainer("entertainer2");
+		entertainer2.setCompanyAddress(new Address(address.getCity(), address.getStreet(), address.getZipcode())); // 값을 복사해서 아용
+		em.persist(entertainer2);
+
+		// entertainer1의 주소 내용을 변경
+		entertainer1.getCompanyAddress().setCity("newCity");
+		entertainer1.getCompanyAddress().setStreet("newStreet");
+		entertainer1.getCompanyAddress().setZipcode("newZipcode");
+
+		em.flush();
+		em.clear();
+
+		// when
+		String selectEntertainer2Query = "select e from Entertainer e where e.name = 'entertainer2'";
+		Entertainer foundEntertainer2 = em.createQuery(selectEntertainer2Query, Entertainer.class).getSingleResult();
+		Address entertainer2Address = foundEntertainer2.getCompanyAddress();
+
+		// then
+		assertThat(entertainer2Address.getCity()).isEqualTo("city");
+		assertThat(entertainer2Address.getStreet()).isEqualTo("street");
+		assertThat(entertainer2Address.getZipcode()).isEqualTo("zipcode");
+	}
+
 
 }
