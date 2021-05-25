@@ -86,4 +86,28 @@ public class JpqlTest {
         assertThat(users).hasSize(2);
     }
 
+    @DisplayName("네이티브 쿼리")
+    @Test
+    void nativeQuery() {
+        // given
+        User user1 = new User("Kim", 10);
+        User user2 = new User("Kim", 20);
+        User user3 = new User("Lee", 30);
+        User user4 = new User("Park", 40);
+        em.persist(user1);
+        em.persist(user2);
+        em.persist(user3);
+        em.persist(user4);
+
+        em.flush();
+        em.clear();
+
+        // when
+        String selectUserQuery = "select user_id, group_id, name, age from User where name = 'Kim'";
+        List<User> users = em.createNativeQuery(selectUserQuery, User.class).getResultList();
+
+        // then
+        assertThat(users).hasSize(2);
+    }
+
 }
