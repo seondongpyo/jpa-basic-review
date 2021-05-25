@@ -2,10 +2,7 @@ package io.github.seondongpyo.jpql;
 
 import org.junit.jupiter.api.*;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.NoResultException;
-import javax.persistence.Persistence;
+import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -173,6 +170,28 @@ public class JpqlTest {
             em.createQuery(selectUserQuery, User.class)
                 .setParameter("name", "Lee")
                 .getSingleResult());
+    }
+
+    @DisplayName("getSingleResult() - 결과가 둘 이상이면 NonUniqueResultException 발생")
+    @Test
+    void nonUniqueResultException() {
+        // given
+        User user1 = new User("Kim", 10);
+        User user2 = new User("Kim", 20);
+        em.persist(user1);
+        em.persist(user2);
+
+        em.flush();
+        em.clear();
+
+        // when
+        String selectUserQuery = "select u from User u where u.name = :name";
+
+        // then
+        assertThrows(NonUniqueResultException.class, () ->
+                em.createQuery(selectUserQuery, User.class)
+                        .setParameter("name", "Kim")
+                        .getSingleResult());
     }
 
 }
