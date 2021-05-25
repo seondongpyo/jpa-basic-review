@@ -131,4 +131,29 @@ public class JpqlTest {
         assertThat(users).hasSize(3);
     }
 
+    @DisplayName("결과 조회 API getSingleResult() - 결과가 정확히 하나인 경우")
+    @Test
+    void getSingleResult() {
+        // given
+        User user1 = new User("Kim", 10);
+        User user2 = new User("Lee", 20);
+        User user3 = new User("Park", 30);
+        em.persist(user1);
+        em.persist(user2);
+        em.persist(user3);
+
+        em.flush();
+        em.clear();
+
+        // when
+        String selectUserQuery = "select u from User u where u.name = :name";
+        User user = em.createQuery(selectUserQuery, User.class)
+                        .setParameter("name", "Kim")
+                        .getSingleResult();
+
+        // then
+        assertThat(user.getName()).isEqualTo("Kim");
+        assertThat(user.getAge()).isEqualTo(10);
+    }
+
 }
