@@ -1,12 +1,10 @@
 package io.github.seondongpyo.jpql;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -14,6 +12,7 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("JPQL - 객체 지향 쿼리 언어")
 public class JpqlTest {
@@ -154,6 +153,26 @@ public class JpqlTest {
         // then
         assertThat(user.getName()).isEqualTo("Kim");
         assertThat(user.getAge()).isEqualTo(10);
+    }
+
+    @DisplayName("getSingleResult() - 결과가 없으면 NoResultException 발생")
+    @Test
+    void noResultException() {
+        // given
+        User user = new User("Kim", 10);
+        em.persist(user);
+
+        em.flush();
+        em.clear();
+
+        // when
+        String selectUserQuery = "select u from User u where u.name = :name";
+
+        // then
+        assertThrows(NoResultException.class, () ->
+            em.createQuery(selectUserQuery, User.class)
+                .setParameter("name", "Lee")
+                .getSingleResult());
     }
 
 }
