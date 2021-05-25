@@ -110,4 +110,25 @@ public class JpqlTest {
         assertThat(users).hasSize(2);
     }
 
+    @DisplayName("결과 조회 API getResultList() - 결과가 하나 이상일 경우")
+    @Test
+    void getResultList() {
+        // given
+        User user1 = new User("Kim", 10);
+        User user2 = new User("Lee", 20);
+        User user3 = new User("Park", 30);
+        em.persist(user1);
+        em.persist(user2);
+        em.persist(user3);
+
+        em.flush();
+        em.clear();
+
+        // when
+        List<User> users = em.createQuery("select u from User u", User.class).getResultList();
+
+        // then
+        assertThat(users).hasSize(3);
+    }
+
 }
