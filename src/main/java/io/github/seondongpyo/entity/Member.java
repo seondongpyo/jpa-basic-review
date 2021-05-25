@@ -1,9 +1,12 @@
 package io.github.seondongpyo.entity;
 
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+@NoArgsConstructor
 @Entity
 public class Member {
 
@@ -13,9 +16,6 @@ public class Member {
     private String name;
 
     private int age;
-
-    public Member() {
-    }
 
     public Member(String name, int age) {
         this.name = name;
