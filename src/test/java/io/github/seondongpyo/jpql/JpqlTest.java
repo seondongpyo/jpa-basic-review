@@ -8,6 +8,9 @@ import org.junit.jupiter.api.Test;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -49,6 +52,38 @@ public class JpqlTest {
 
         // then
         assertThat(users).hasSize(50);
+    }
+
+    @DisplayName("Criteria : 문자가 아닌 자바 코드로 JPQL을 작성할 수 있다.")
+    @Test
+    void criteria() {
+        // given
+        User user1 = new User("Kim", 10);
+        User user2 = new User("Kim", 20);
+        User user3 = new User("Lee", 30);
+        User user4 = new User("Park", 40);
+        em.persist(user1);
+        em.persist(user2);
+        em.persist(user3);
+        em.persist(user4);
+
+        em.flush();
+        em.clear();
+
+        // Criteria 사용 준비
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<User> query = cb.createQuery(User.class);
+
+        // 루트 클래스 (조회를 시작할 클래스)
+        Root<User> u = query.from(User.class);
+
+        // when
+        // 이름이 'Kim'인 유저만 조회
+        CriteriaQuery<User> cq = query.select(u).where(cb.equal(u.get("name"), "Kim"));
+        List<User> users = em.createQuery(cq).getResultList();
+
+        // then
+        assertThat(users).hasSize(2);
     }
 
 }
