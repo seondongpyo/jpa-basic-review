@@ -217,4 +217,30 @@ public class JpqlTest {
         assertThat(foundUser.getAge()).isEqualTo(20);
     }
 
+    @DisplayName("파라미터 바인딩 - 위치 기준")
+    @Test
+    void parameterBindingByPosition() {
+        // given
+        User user1 = new User("Kim", 10);
+        User user2 = new User("Kim", 20);
+        User user3 = new User("Lee", 30);
+        em.persist(user1);
+        em.persist(user2);
+        em.persist(user3);
+
+        em.flush();
+        em.clear();
+
+        // when
+        String selectUserQuery = "select u from User u where u.name = ?1 and u.age = ?2";
+        User foundUser = em.createQuery(selectUserQuery, User.class)
+                            .setParameter(1, "Kim")
+                            .setParameter(2, 20)
+                            .getSingleResult();
+
+        // then
+        assertThat(foundUser.getName()).isEqualTo("Kim");
+        assertThat(foundUser.getAge()).isEqualTo(20);
+    }
+
 }
