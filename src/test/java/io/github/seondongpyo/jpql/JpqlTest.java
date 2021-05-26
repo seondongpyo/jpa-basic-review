@@ -194,4 +194,27 @@ public class JpqlTest {
                         .getSingleResult());
     }
 
+    @DisplayName("파라미터 바인딩 - 이름 기준")
+    @Test
+    void parameterBindingByName() {
+        // given
+        User user1 = new User("user1", 20);
+        User user2 = new User("user2", 30);
+        em.persist(user1);
+        em.persist(user2);
+
+        em.flush();
+        em.clear();
+
+        // when
+        String selectUserQuery = "select u from User u where u.name = :name";
+        User foundUser = em.createQuery(selectUserQuery, User.class)
+                            .setParameter("name", "user1")
+                            .getSingleResult();
+
+        // then
+        assertThat(foundUser.getName()).isEqualTo("user1");
+        assertThat(foundUser.getAge()).isEqualTo(20);
+    }
+
 }
