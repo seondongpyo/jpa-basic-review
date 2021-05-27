@@ -344,4 +344,26 @@ public class JpqlTest {
         assertThat(userDto.getAge()).isEqualTo(user.getAge());
     }
 
+    @DisplayName("페이징 API")
+    @Test
+    void pagingQuery() {
+        // given
+        for (int i = 1; i <= 20; i++) {
+            User user = new User("user" + i, i);
+            em.persist(user);
+        }
+
+        em.flush();
+        em.clear();
+
+        // when
+        List<User> users = em.createQuery("select u from User u", User.class)
+                                .setFirstResult(0)
+                                .setMaxResults(10)
+                                .getResultList();
+
+        // then
+        assertThat(users).hasSize(10);
+    }
+
 }
