@@ -10,7 +10,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -324,6 +323,25 @@ public class JpqlTest {
 
         // then
         assertThat(results).contains(user.getName(), user.getAge());
+    }
+
+    @DisplayName("여러 값 조회 - new 명령어")
+    @Test
+    void newDtoProjection() {
+        // given
+        User user = new User("user", 10);
+        em.persist(user);
+
+        em.flush();
+        em.clear();
+
+        // when
+        String newDtoQuery = "select new io.github.seondongpyo.jpql.UserDto(u.name, u.age) from User u";
+        UserDto userDto = em.createQuery(newDtoQuery, UserDto.class).getSingleResult();
+
+        // then
+        assertThat(userDto.getName()).isEqualTo(user.getName());
+        assertThat(userDto.getAge()).isEqualTo(user.getAge());
     }
 
 }
