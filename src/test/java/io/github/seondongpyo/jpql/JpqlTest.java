@@ -102,7 +102,7 @@ public class JpqlTest {
         em.clear();
 
         // when
-        String selectUserQuery = "select user_id, group_id, name, age from User where name = 'Kim'";
+        String selectUserQuery = "select user_id, group_id, name, age, email, website, twitterUsername from User where name = 'Kim'";
         List<User> users = em.createNativeQuery(selectUserQuery, User.class).getResultList();
 
         // then
@@ -284,6 +284,27 @@ public class JpqlTest {
 
         // then
         assertThat(foundGroup.getName()).isEqualTo(group.getName());
+    }
+
+    @DisplayName("프로젝션 - 임베디드 타입")
+    @Test
+    void embeddedTypeProjection() {
+        // given
+        Profile profile = new Profile("abc@gmail.com", "http://www.aaa.com", "abc");
+
+        User user = new User("user", 20);
+        user.setProfile(profile);
+        em.persist(user);
+
+        em.flush();
+        em.clear();
+
+        // when
+        Profile foundProfile = em.createQuery("select u.profile from User u", Profile.class)
+                                    .getSingleResult();
+
+        // then
+        assertThat(foundProfile).isEqualTo(profile);
     }
 
 }

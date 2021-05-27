@@ -24,6 +24,9 @@ public class User {
 
     private int age;
 
+    @Embedded
+    private Profile profile;
+
     public User(String name, int age) {
         this.name = name;
         this.age = age;
