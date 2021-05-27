@@ -10,6 +10,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -305,6 +306,24 @@ public class JpqlTest {
 
         // then
         assertThat(foundProfile).isEqualTo(profile);
+    }
+
+    @DisplayName("프로젝션 - 스칼라 타입")
+    @Test
+    void scalaTypeProjection() {
+        // given
+        User user = new User("user", 30);
+        em.persist(user);
+
+        em.flush();
+        em.clear();
+
+        // when
+        List result = em.createQuery("select u.name, u.age from User u").getResultList();
+        Object[] results = (Object[]) result.get(0);
+
+        // then
+        assertThat(results).contains(user.getName(), user.getAge());
     }
 
 }
