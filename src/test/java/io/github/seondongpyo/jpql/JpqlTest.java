@@ -1,6 +1,9 @@
 package io.github.seondongpyo.jpql;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -9,7 +12,7 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("JPQL - 객체 지향 쿼리 언어")
 public class JpqlTest {
@@ -241,6 +244,46 @@ public class JpqlTest {
         // then
         assertThat(foundUser.getName()).isEqualTo("Kim");
         assertThat(foundUser.getAge()).isEqualTo(20);
+    }
+    
+    @DisplayName("프로젝션 - 엔티티")
+    @Test
+    void entityProjection() {
+        // given
+        User user = new User("user", 10);
+        em.persist(user);
+
+        em.flush();
+        em.clear();
+
+        // when
+        User foundUser = em.createQuery("select u from User u", User.class)
+                            .getSingleResult();
+
+        // then
+        assertThat(foundUser).isEqualTo(user);
+    }
+
+    @DisplayName("프로젝션 - 연관관계 엔티티")
+    @Test
+    void relatedEntityProjection() {
+        // given
+        Group group = new Group("A");
+        em.persist(group);
+
+        User user = new User("user", 20);
+        user.setGroup(group);
+        em.persist(user);
+
+        em.flush();
+        em.clear();
+
+        // when
+        Group foundGroup = em.createQuery("select u.group from User u", Group.class)
+                                .getSingleResult();
+
+        // then
+        assertThat(foundGroup.getName()).isEqualTo(group.getName());
     }
 
 }
