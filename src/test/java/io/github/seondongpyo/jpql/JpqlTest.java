@@ -366,4 +366,32 @@ public class JpqlTest {
         assertThat(users).hasSize(10);
     }
 
+    @DisplayName("내부 조인")
+    @Test
+    void innerJoin() {
+        // given
+        Group group = new Group();
+        em.persist(group);
+
+        User user1 = new User();
+        User user2 = new User();
+        User user3 = new User();
+        user1.setGroup(group);
+        user2.setGroup(null);
+        user3.setGroup(null);
+        em.persist(user1);
+        em.persist(user2);
+        em.persist(user3);
+
+        em.flush();
+        em.clear();
+
+        // when
+        List<User> users = em.createQuery("select u from User u join u.group", User.class)
+                                .getResultList();
+
+        // then
+        assertThat(users).hasSize(1);
+    }
+
 }
