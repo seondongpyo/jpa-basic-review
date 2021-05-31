@@ -484,4 +484,30 @@ public class JpqlTest {
         assertThat(users).hasSize(2);
     }
 
+    @DisplayName("서브 쿼리")
+    @Test
+    void subQuery() {
+        // given
+        User user1 = new User("user1", 10);
+        User user2 = new User("user2", 21);
+        User user3 = new User("user3", 28);
+        User user4 = new User("user4", 32);
+        User user5 = new User("user5", 45);
+        em.persist(user1);
+        em.persist(user2);
+        em.persist(user3);
+        em.persist(user4);
+        em.persist(user5);
+
+        em.flush();
+        em.clear();
+
+        // when
+        // 전체 회원의 중 평균 나이보다 많은 회원들만 조회
+        List<User> users = em.createQuery("select u from User u where u.age > (select avg(u2.age) from User u2)", User.class)
+                                .getResultList();
+        // then
+        assertThat(users).hasSize(3);
+    }
+
 }
