@@ -19,6 +19,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import io.github.seondongpyo.mapping.relation.direction.unidirectional.Team;
+
 @DisplayName("JPQL - 객체 지향 쿼리 언어")
 public class JpqlTest {
 
@@ -452,6 +454,30 @@ public class JpqlTest {
         // when
         String selectGroup1Users = "select u from User u join u.group g on g.name = 'group1'";
         List<User> users = em.createQuery(selectGroup1Users, User.class)
+                                .getResultList();
+
+        // then
+        assertThat(users).hasSize(2);
+    }
+
+    @DisplayName("ON 절 - 연관관계가 없는 엔티티의 조인")
+    @Test
+    void joinOnEntity() {
+        // given
+        Team team = new Team("team");
+        em.persist(team);
+
+        User user1 = new User("team", 10);
+        User user2 = new User("team", 20);
+        User user3 = new User("group", 30);
+        User user4 = new User("party", 40);
+        em.persist(user1);
+        em.persist(user2);
+        em.persist(user3);
+        em.persist(user4);
+
+        // when
+        List<User> users = em.createQuery("select u from User u join Team t on u.name = t.name", User.class)
                                 .getResultList();
 
         // then
