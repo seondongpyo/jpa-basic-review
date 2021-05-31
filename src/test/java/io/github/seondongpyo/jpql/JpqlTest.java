@@ -1,18 +1,23 @@
 package io.github.seondongpyo.jpql;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
+import javax.persistence.Persistence;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("JPQL - 객체 지향 쿼리 언어")
 public class JpqlTest {
@@ -420,6 +425,37 @@ public class JpqlTest {
 
         // then
         assertThat(users).hasSize(3);
+    }
+
+    @DisplayName("ON 절 - 조인 대상 필터링")
+    @Test
+    void joinOn() {
+        // given
+        Group group1 = new Group("group1");
+        Group group2 = new Group("group2");
+        em.persist(group1);
+        em.persist(group2);
+
+        User user1 = new User("user1", 10);
+        User user2 = new User("user2", 20);
+        User user3 = new User("user3", 30);
+        user1.setGroup(group1);
+        user2.setGroup(group1);
+        user3.setGroup(group2);
+        em.persist(user1);
+        em.persist(user2);
+        em.persist(user3);
+
+        em.flush();
+        em.clear();
+
+        // when
+        String selectGroup1Users = "select u from User u join u.group g on g.name = 'group1'";
+        List<User> users = em.createQuery(selectGroup1Users, User.class)
+                                .getResultList();
+
+        // then
+        assertThat(users).hasSize(2);
     }
 
 }
