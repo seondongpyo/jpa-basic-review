@@ -1,5 +1,6 @@
 package io.github.seondongpyo.jpql;
 
+import io.github.seondongpyo.mapping.relation.direction.unidirectional.Team;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -102,7 +103,7 @@ public class JpqlTest {
         em.clear();
 
         // when
-        String selectUserQuery = "select user_id, group_id, name, age, email, website, twitterUsername from User where name = 'Kim'";
+        String selectUserQuery = "select user_id, group_id, name, age, email, website, twitterUsername, userType from User where name = 'Kim'";
         List<User> users = em.createNativeQuery(selectUserQuery, User.class).getResultList();
 
         // then
@@ -422,6 +423,87 @@ public class JpqlTest {
         assertThat(users).hasSize(3);
     }
 
+    @DisplayName("ON 절 - 조인 대상 필터링")
+    @Test
+    void joinOn() {
+        // given
+        Group group1 = new Group("group1");
+        Group group2 = new Group("group2");
+        em.persist(group1);
+        em.persist(group2);
+
+        User user1 = new User("user1", 10);
+        User user2 = new User("user2", 20);
+        User user3 = new User("user3", 30);
+        user1.setGroup(group1);
+        user2.setGroup(group1);
+        user3.setGroup(group2);
+        em.persist(user1);
+        em.persist(user2);
+        em.persist(user3);
+
+        em.flush();
+        em.clear();
+
+        // when
+        String selectGroup1Users = "select u from User u join u.group g on g.name = 'group1'";
+        List<User> users = em.createQuery(selectGroup1Users, User.class)
+                                .getResultList();
+
+        // then
+        assertThat(users).hasSize(2);
+    }
+
+    @DisplayName("ON 절 - 연관관계가 없는 엔티티의 조인")
+    @Test
+    void joinOnEntity() {
+        // given
+        Team team = new Team("team");
+        em.persist(team);
+
+        User user1 = new User("team", 10);
+        User user2 = new User("team", 20);
+        User user3 = new User("group", 30);
+        User user4 = new User("party", 40);
+        em.persist(user1);
+        em.persist(user2);
+        em.persist(user3);
+        em.persist(user4);
+
+        // when
+        List<User> users = em.createQuery("select u from User u join Team t on u.name = t.name", User.class)
+                                .getResultList();
+
+        // then
+        assertThat(users).hasSize(2);
+    }
+
+    @DisplayName("서브 쿼리")
+    @Test
+    void subQuery() {
+        // given
+        User user1 = new User("user1", 10);
+        User user2 = new User("user2", 21);
+        User user3 = new User("user3", 28);
+        User user4 = new User("user4", 32);
+        User user5 = new User("user5", 45);
+        em.persist(user1);
+        em.persist(user2);
+        em.persist(user3);
+        em.persist(user4);
+        em.persist(user5);
+
+        em.flush();
+        em.clear();
+
+        // when
+        // 전체 회원의 중 평균 나이보다 많은 회원들만 조회
+        List<User> users = em.createQuery("select u from User u where u.age > (select avg(u2.age) from User u2)", User.class)
+                                .getResultList();
+        // then
+        assertThat(users).hasSize(3);
+    }
+
     @DisplayName("JPQL 타입 표현")
     @Test
     void jpqlTypeExpression() {
@@ -433,11 +515,10 @@ public class JpqlTest {
         em.flush();
         em.clear();
 
-        // when
         String query =  "select 'Hello', 10L, TRUE from User u where u.userType = :userType";
         List<Object[]> resultList = em.createQuery(query, Object[].class)
-                                        .setParameter("userType", UserType.ADMIN)
-                                        .getResultList();
+                .setParameter("userType", UserType.ADMIN)
+                .getResultList();
 
         Object[] result = resultList.get(0);
 
