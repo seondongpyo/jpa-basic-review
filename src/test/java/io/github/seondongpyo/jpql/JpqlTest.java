@@ -624,4 +624,29 @@ public class JpqlTest {
         assertThat(resultList.get(2)).isEqualTo("홍길동");
     }
 
+    @DisplayName("조건식 - NULLIF")
+    @Test
+    void nullif() {
+        // given
+        User user1 = new User("고길동", 40);
+        User user2 = new User("둘리", 10);
+        User user3 = new User("도우너", 10);
+        User user4 = new User("또치", 10);
+        em.persist(user1);
+        em.persist(user2);
+        em.persist(user3);
+        em.persist(user4);
+
+        // when
+        String query = "select nullif(u.name, '고길동') from User u";
+        List<String> resultList = em.createQuery(query, String.class)
+                                    .getResultList();
+
+        // then
+        assertThat(resultList.get(0)).isNull();
+        assertThat(resultList.get(1)).isEqualTo("둘리");
+        assertThat(resultList.get(2)).isEqualTo("도우너");
+        assertThat(resultList.get(3)).isEqualTo("또치");
+    }
+
 }
