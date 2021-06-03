@@ -528,4 +528,76 @@ public class JpqlTest {
         assertThat(result[2]).isEqualTo(true);
     }
 
+    @DisplayName("CASE 조건식 - 기본")
+    @Test
+    void caseDefault() {
+        // given
+        User user1 = new User("user1", 20);
+        User user2 = new User("user2", 40);
+        User user3 = new User("user3", 60);
+        User user4 = new User("user4", 70);
+        User user5 = new User("user5", 100);
+        User user6 = new User("user6", 35);
+        em.persist(user1);
+        em.persist(user2);
+        em.persist(user3);
+        em.persist(user4);
+        em.persist(user5);
+        em.persist(user6);
+
+        // when
+        String query =
+                "select " +
+                "   case when u.age = 20 then '약관' " +
+                "        when u.age = 40 then '지천명' " +
+                "        when u.age = 60 then '환갑' " +
+                "        when u.age = 70 then '고희' " +
+                "        when u.age = 100 then '상수' " +
+                "        else '일반' " +
+                "   end " +
+                "from User u";
+
+        List<String> resultList = em.createQuery(query, String.class).getResultList();
+
+        // then
+        assertThat(resultList.get(0)).isEqualTo("약관");
+        assertThat(resultList.get(1)).isEqualTo("지천명");
+        assertThat(resultList.get(2)).isEqualTo("환갑");
+        assertThat(resultList.get(3)).isEqualTo("고희");
+        assertThat(resultList.get(4)).isEqualTo("상수");
+        assertThat(resultList.get(5)).isEqualTo("일반");
+    }
+
+    @DisplayName("CASE 조건식 - 단순")
+    @Test
+    void caseSimple() {
+        // given
+        User user1 = new User("고길동", 50);
+        em.persist(user1);
+
+        User user2 = new User("둘리", 10);
+        em.persist(user2);
+
+        User user3 = new User("마이콜", 20);
+        em.persist(user3);
+
+        // when
+        String query =
+                "select " +
+                "   case u.name " +
+                "       when '고길동' then '집주인' " +
+                "       when '둘리' then '세입자' " +
+                "       else '동네주민' " +
+                "   end " +
+                "from User u";
+
+        List<String> resultList = em.createQuery(query, String.class).getResultList();
+
+        // then
+        assertThat(resultList.get(0)).isEqualTo("집주인");
+        assertThat(resultList.get(1)).isEqualTo("세입자");
+        assertThat(resultList.get(2)).isEqualTo("동네주민");
+    }
+
+
 }
