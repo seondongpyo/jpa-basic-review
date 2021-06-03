@@ -27,6 +27,9 @@ public class User {
     @Embedded
     private Profile profile;
 
+    @Enumerated(EnumType.STRING)
+    private UserType userType;
+
     public User(String name, int age) {
         this.name = name;
         this.age = age;

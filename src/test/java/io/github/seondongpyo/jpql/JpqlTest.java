@@ -422,4 +422,29 @@ public class JpqlTest {
         assertThat(users).hasSize(3);
     }
 
+    @DisplayName("JPQL 타입 표현")
+    @Test
+    void jpqlTypeExpression() {
+        // given
+        User user = new User("user1", 20);
+        user.setUserType(UserType.ADMIN);
+        em.persist(user);
+
+        em.flush();
+        em.clear();
+
+        // when
+        String query =  "select 'Hello', 10L, TRUE from User u where u.userType = :userType";
+        List<Object[]> resultList = em.createQuery(query, Object[].class)
+                                        .setParameter("userType", UserType.ADMIN)
+                                        .getResultList();
+
+        Object[] result = resultList.get(0);
+
+        // then
+        assertThat(result[0]).isEqualTo("Hello");
+        assertThat(result[1]).isEqualTo(10L);
+        assertThat(result[2]).isEqualTo(true);
+    }
+
 }
