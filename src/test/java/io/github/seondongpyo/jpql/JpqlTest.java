@@ -599,5 +599,29 @@ public class JpqlTest {
         assertThat(resultList.get(2)).isEqualTo("동네주민");
     }
 
+    @DisplayName("조건식 - COALESCE")
+    @Test
+    void coalesce() {
+        // given
+        User user1 = new User(null, 10);
+        em.persist(user1);
+
+        User user2 = new User("", 20);
+        em.persist(user2);
+
+        User user3 = new User("홍길동", 30);
+        em.persist(user3);
+
+        // when
+        // coalesce : 값이 null이면 지정한 값을 반환
+        String query = "select coalesce(u.name, '익명회원') from User u";
+        List<String> resultList = em.createQuery(query, String.class)
+                                    .getResultList();
+
+        // then
+        assertThat(resultList.get(0)).isEqualTo("익명회원");
+        assertThat(resultList.get(1)).isEqualTo("");
+        assertThat(resultList.get(2)).isEqualTo("홍길동");
+    }
 
 }
