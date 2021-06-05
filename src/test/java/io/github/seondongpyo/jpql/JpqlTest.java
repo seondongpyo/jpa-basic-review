@@ -1,6 +1,8 @@
 package io.github.seondongpyo.jpql;
 
 import io.github.seondongpyo.mapping.relation.direction.unidirectional.Team;
+import io.github.seondongpyo.mapping.relation.onetomany.bidirectional.Airplane;
+import io.github.seondongpyo.mapping.relation.onetomany.bidirectional.Airport;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -649,9 +651,9 @@ public class JpqlTest {
         assertThat(resultList.get(3)).isEqualTo("또치");
     }
 
-    @DisplayName("페치 조인")
+    @DisplayName("엔티티 페치 조인")
     @Test
-    void fetchJoin() {
+    void entityFetchJoin() {
         // given
         Group group = new Group("group1");
         em.persist(group);
@@ -667,6 +669,39 @@ public class JpqlTest {
         // then
         assertThat(Persistence.getPersistenceUtil().isLoaded(foundUser.getGroup())).isTrue();
         assertThat(foundUser.getGroup().getName()).isEqualTo("group1");
+    }
+
+    @DisplayName("컬렉션 페치 조인")
+    @Test
+    void collectionFetchJoin() {
+        // given
+        Airplane airplane1 = new Airplane();
+        Airplane airplane2 = new Airplane();
+        Airplane airplane3 = new Airplane();
+        em.persist(airplane1);
+        em.persist(airplane2);
+        em.persist(airplane3);
+
+        Airport incheonAirport = new Airport("인천공항");
+        incheonAirport.getAirplanes().add(airplane1);
+        incheonAirport.getAirplanes().add(airplane2);
+        em.persist(incheonAirport);
+
+        Airport jejuAirport = new Airport("제주공항");
+        jejuAirport.getAirplanes().add(airplane3);
+        em.persist(jejuAirport);
+
+        // when
+        String query = "select a from Airport a join fetch a.airplanes where a.name = :name";
+        Airport foundAirport = em.createQuery(query, Airport.class)
+                                    .setParameter("name", "인천공항")
+                                    .getSingleResult();
+
+        // then
+        assertThat(foundAirport.getAirplanes()).hasSize(2);
+        for (Airplane airplane : foundAirport.getAirplanes()) {
+            assertThat(Persistence.getPersistenceUtil().isLoaded(airplane)).isTrue();
+        }
     }
 
 }
