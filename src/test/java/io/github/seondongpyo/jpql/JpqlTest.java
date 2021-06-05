@@ -649,4 +649,24 @@ public class JpqlTest {
         assertThat(resultList.get(3)).isEqualTo("또치");
     }
 
+    @DisplayName("페치 조인")
+    @Test
+    void fetchJoin() {
+        // given
+        Group group = new Group("group1");
+        em.persist(group);
+
+        User user = new User("user1", 10);
+        user.setGroup(group);
+        em.persist(user);
+
+        // when
+        User foundUser = em.createQuery("select u from User u join fetch u.group", User.class)
+                                .getSingleResult();
+
+        // then
+        assertThat(Persistence.getPersistenceUtil().isLoaded(foundUser.getGroup())).isTrue();
+        assertThat(foundUser.getGroup().getName()).isEqualTo("group1");
+    }
+
 }
