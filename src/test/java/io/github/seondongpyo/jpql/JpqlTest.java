@@ -731,4 +731,27 @@ public class JpqlTest {
         assertThat(items).hasOnlyElementsOfTypes(Book.class, Movie.class);
     }
 
+    @DisplayName("TREAT(JPA 2.1~)")
+    @Test
+    void treat() {
+        // given
+        Book book1 = new Book("Kim", "1234");
+        book1.setName("book1");
+        em.persist(book1);
+
+        Book book2 = new Book("Park", "5678");
+        book2.setName("book2");
+        em.persist(book2);
+
+        // when
+        String query = "select i from Item i where treat(i as Book).author = 'Park'";
+        Item foundItem = em.createQuery(query, Item.class)
+                            .getSingleResult();
+
+        // then
+        assertThat(foundItem.getName()).isEqualTo(book2.getName());
+        assertThat(((Book) foundItem).getAuthor()).isEqualTo(book2.getAuthor());
+        assertThat(((Book) foundItem).getIsbn()).isEqualTo(book2.getIsbn());
+    }
+
 }
