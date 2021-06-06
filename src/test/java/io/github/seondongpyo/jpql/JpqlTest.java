@@ -751,4 +751,124 @@ class JpqlTest {
         assertThat(((Book) foundItem).getIsbn()).isEqualTo(book2.getIsbn());
     }
 
+    @DisplayName("엔티티 직접 사용")
+    @Test
+    void useEntityDirectly() {
+        // given
+        User user1 = new User();
+        User user2 = new User();
+        User user3 = new User();
+        em.persist(user1);
+        em.persist(user2);
+        em.persist(user3);
+
+        // when
+        String query = "select count(u) from User u";
+        Long result = em.createQuery(query, Long.class).getSingleResult();
+
+        // then
+        assertThat(result).isEqualTo(3);
+    }
+
+    @DisplayName("엔티티 직접 사용 - 엔티티를 파라미터로 전달")
+    @Test
+    void useEntityDirectlyForParameter() {
+        // given
+        User user1 = new User("Kim", 10);
+        User user2 = new User("Kim", 10);
+        em.persist(user1);
+        em.persist(user2);
+
+        // when
+        String query = "select u from User u where u = :user";
+        List<User> users = em.createQuery(query, User.class)
+                                .setParameter("user", user1)
+                                .getResultList();
+
+        // then
+        assertThat(users).hasSize(1);
+        assertThat(users.get(0).getId()).isEqualTo(user1.getId());
+    }
+
+    @DisplayName("엔티티 직접 사용 - 식별자를 파라미터로 전달")
+    @Test
+    void useEntityIdDirectlyForParameter() {
+        // given
+        User user1 = new User("Park", 20);
+        User user2 = new User("Park", 20);
+        em.persist(user1);
+        em.persist(user2);
+
+        // when
+        String query = "select u from User u where u.id = :userId";
+        List<User> users = em.createQuery(query, User.class)
+                                .setParameter("userId", user1.getId())
+                                .getResultList();
+
+        // then
+        assertThat(users.get(0).getId()).isEqualTo(user1.getId());
+    }
+
+    @DisplayName("엔티티 직접 사용 - 연관관계 엔티티")
+    @Test
+    void useRelatedEntityDirectlyForParameter() {
+        // given
+        Group group1 = new Group("group1");
+        Group group2 = new Group("group2");
+        em.persist(group1);
+        em.persist(group2);
+
+        User user1 = new User();
+        user1.setGroup(group1);
+        em.persist(user1);
+
+        User user2 = new User();
+        user2.setGroup(group1);
+        em.persist(user2);
+
+        User user3 = new User();
+        user3.setGroup(group2);
+        em.persist(user3);
+
+        // when
+        String query = "select u from User u where u.group = :group";
+        List<User> users = em.createQuery(query, User.class)
+                                .setParameter("group", group1)
+                                .getResultList();
+
+        // then
+        assertThat(users).hasSize(2);
+    }
+
+    @DisplayName("엔티티 직접 사용 - 외래 키 값")
+    @Test
+    void useEntityForeignKeyDirectlyForParameter() {
+        // given
+        Group group1 = new Group("group1");
+        Group group2 = new Group("group2");
+        em.persist(group1);
+        em.persist(group2);
+
+        User user1 = new User();
+        user1.setGroup(group1);
+        em.persist(user1);
+
+        User user2 = new User();
+        user2.setGroup(group1);
+        em.persist(user2);
+
+        User user3 = new User();
+        user3.setGroup(group2);
+        em.persist(user3);
+
+        // when
+        String query = "select u from User u where u.group.id = :groupId";
+        List<User> users = em.createQuery(query, User.class)
+                .setParameter("groupId", group2.getId())
+                .getResultList();
+
+        // then
+        assertThat(users).hasSize(1);
+    }
+
 }
