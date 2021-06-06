@@ -18,7 +18,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("기본 키 생성 전략")
-public class IdGenerationTest {
+class IdGenerationTest {
 
 	private EntityManagerFactory emf;
 	private EntityManager em;

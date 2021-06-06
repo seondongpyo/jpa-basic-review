@@ -16,7 +16,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("@Temporal 속성")
-public class TemporalTest {
+class TemporalTest {
 
 	private EntityManagerFactory emf;
 	private EntityManager em;
@@ -67,7 +67,7 @@ public class TemporalTest {
 
 		// then
 		Employee foundEmployee = em.find(Employee.class, employee.getId());
-		assertThat(foundEmployee.getStartWorkTime().toString()).isEqualTo("09:30:15");
+		assertThat(foundEmployee.getStartWorkTime()).hasToString("09:30:15");
 	}
 
 	@Test
@@ -85,7 +85,7 @@ public class TemporalTest {
 
 		// then
 		Employee foundEmployee = em.find(Employee.class, employee.getId());
-		assertThat(foundEmployee.getLastBusinessTripDateTime().toString()).isEqualTo("2021-05-01 18:00:30.0");
+		assertThat(foundEmployee.getLastBusinessTripDateTime()).hasToString("2021-05-01 18:00:30.0");
 	}
 	
 }

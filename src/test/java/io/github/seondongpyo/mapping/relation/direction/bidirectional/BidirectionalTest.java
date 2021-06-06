@@ -11,7 +11,7 @@ import javax.persistence.Persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class BidirectionalTest {
+class BidirectionalTest {
 
     private EntityManagerFactory emf;
     private EntityManager em;

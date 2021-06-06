@@ -15,7 +15,7 @@ import javax.persistence.Persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ManyToOneTest {
+class ManyToOneTest {
 
     private EntityManagerFactory emf;
     private EntityManager em;

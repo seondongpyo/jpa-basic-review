@@ -13,7 +13,7 @@ import javax.persistence.Persistence;
 import static org.assertj.core.api.Assertions.*;
 
 @DisplayName("영속성 관리")
-public class PersistenceTest {
+class PersistenceTest {
 
     private EntityManagerFactory emf;
     private EntityManager em;

@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 import io.github.seondongpyo.proxy.FootballPlayer;
 
 @DisplayName("프록시")
-public class ProxyBasicTest {
+class ProxyBasicTest {
 
 	private EntityManagerFactory emf;
 	private EntityManager em;

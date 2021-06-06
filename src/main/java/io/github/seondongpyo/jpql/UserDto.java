@@ -1,6 +1,5 @@
 package io.github.seondongpyo.jpql;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

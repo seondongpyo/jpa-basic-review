@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("JPQL - 객체 지향 쿼리 언어")
-public class JpqlTest {
+class JpqlTest {
 
     private EntityManagerFactory emf;
     private EntityManager em;
@@ -174,12 +174,11 @@ public class JpqlTest {
 
         // when
         String selectUserQuery = "select u from User u where u.name = :name";
+        TypedQuery<User> query = em.createQuery(selectUserQuery, User.class)
+                                    .setParameter("name", "Lee");
 
         // then
-        assertThrows(NoResultException.class, () ->
-            em.createQuery(selectUserQuery, User.class)
-                .setParameter("name", "Lee")
-                .getSingleResult());
+        assertThrows(NoResultException.class, query::getSingleResult);
     }
 
     @DisplayName("getSingleResult() - 결과가 둘 이상이면 NonUniqueResultException 발생")
@@ -196,12 +195,11 @@ public class JpqlTest {
 
         // when
         String selectUserQuery = "select u from User u where u.name = :name";
+        TypedQuery<User> query = em.createQuery(selectUserQuery, User.class)
+                                    .setParameter("name", "Kim");
 
         // then
-        assertThrows(NonUniqueResultException.class, () ->
-                em.createQuery(selectUserQuery, User.class)
-                        .setParameter("name", "Kim")
-                        .getSingleResult());
+        assertThrows(NonUniqueResultException.class, query::getSingleResult);
     }
 
     @DisplayName("파라미터 바인딩 - 이름 기준")
@@ -626,7 +624,7 @@ public class JpqlTest {
 
         // then
         assertThat(resultList.get(0)).isEqualTo("익명회원");
-        assertThat(resultList.get(1)).isEqualTo("");
+        assertThat(resultList.get(1)).isEmpty();
         assertThat(resultList.get(2)).isEqualTo("홍길동");
     }
 
@@ -727,8 +725,7 @@ public class JpqlTest {
                                 .getResultList();
 
         // then
-        assertThat(items).hasSize(2);
-        assertThat(items).hasOnlyElementsOfTypes(Book.class, Movie.class);
+        assertThat(items).hasSize(2).hasOnlyElementsOfTypes(Book.class, Movie.class);
     }
 
     @DisplayName("TREAT(JPA 2.1~)")

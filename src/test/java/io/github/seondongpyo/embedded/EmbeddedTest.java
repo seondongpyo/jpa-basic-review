@@ -18,7 +18,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("임베디드 타입")
-public class EmbeddedTest {
+class EmbeddedTest {
 
 	private EntityManagerFactory emf;
 	private EntityManager em;
@@ -255,8 +255,8 @@ public class EmbeddedTest {
 		// then
 		assertThat(addressHistory1).hasSize(2);
 		assertThat(favoriteDirectors1).hasSize(3);
-		assertThat(addressHistory2).hasSize(0);
-		assertThat(favoriteDirectors2).hasSize(0);
+		assertThat(addressHistory2).isEmpty();
+		assertThat(favoriteDirectors2).isEmpty();
 
 	}
 

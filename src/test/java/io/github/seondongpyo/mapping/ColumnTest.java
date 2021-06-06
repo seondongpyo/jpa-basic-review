@@ -16,7 +16,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("@Column 속성")
-public class ColumnTest {
+class ColumnTest {
 
 	private EntityManagerFactory emf;
 	private EntityManager em;

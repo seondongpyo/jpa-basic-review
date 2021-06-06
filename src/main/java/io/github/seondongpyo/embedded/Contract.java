@@ -1,13 +1,11 @@
 package io.github.seondongpyo.embedded;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-import javax.persistence.Embeddable;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.Embeddable;
+import java.time.LocalDate;
 
 @Getter
 @AllArgsConstructor

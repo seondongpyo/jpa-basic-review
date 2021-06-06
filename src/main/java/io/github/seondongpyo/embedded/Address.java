@@ -25,7 +25,7 @@ public class Address {
 			return true;
 		if (o == null || getClass() != o.getClass())
 			return false;
-		Address address = (Address)o;
+		var address = (Address)o;
 		return Objects.equals(city, address.city) && Objects.equals(street, address.street)
 			&& Objects.equals(zipcode, address.zipcode);
 	}

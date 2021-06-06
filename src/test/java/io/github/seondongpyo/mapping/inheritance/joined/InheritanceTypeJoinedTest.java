@@ -11,7 +11,7 @@ import javax.persistence.Persistence;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-public class InheritanceTypeJoinedTest {
+class InheritanceTypeJoinedTest {
 
     private EntityManagerFactory emf;
     private EntityManager em;
@@ -54,11 +54,11 @@ public class InheritanceTypeJoinedTest {
         Item foundMovie = em.find(Item.class, movie.getId());
 
         // then
-        assertThat(foundAlbum instanceof Album).isTrue();
+        assertThat(foundAlbum).isInstanceOf(Album.class);
         assertThat(foundAlbum.getName()).isEqualTo("LILAC");
-        assertThat(foundBook instanceof Book).isTrue();
+        assertThat(foundBook).isInstanceOf(Book.class);
         assertThat(foundBook.getName()).isEqualTo("누가 IT 시장 취업에 성공하는가");
-        assertThat(foundMovie instanceof Movie).isTrue();
+        assertThat(foundMovie).isInstanceOf(Movie.class);
         assertThat(foundMovie.getName()).isEqualTo("미나리");
     }
 

@@ -1,22 +1,16 @@
 package io.github.seondongpyo.mapping.inheritance.tableperclass;
 
-import org.assertj.core.api.Assertions;
-import org.h2.jdbc.JdbcSQLSyntaxErrorException;
-import org.hibernate.exception.SQLGrammarException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.PersistenceException;
+import javax.persistence.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class InheritanceTypeTablePerClassTest {
+class InheritanceTypeTablePerClassTest {
 
     private EntityManagerFactory emf;
     private EntityManager em;
@@ -57,16 +51,16 @@ public class InheritanceTypeTablePerClassTest {
         Vehicle foundBus = em.find(Vehicle.class, bus.getId());
         Vehicle foundSubway = em.find(Vehicle.class, subway.getId());
         Vehicle foundTruck = em.find(Vehicle.class, truck.getId());
+        Query query = em.createNativeQuery("select * from Vehicle");
 
         // then
         // 부모 타입으로 조회 시 UNION ALL 쿼리가 실행된다.
-        assertThat(foundBus instanceof Bus).isTrue();
-        assertThat(foundSubway instanceof Subway).isTrue();
-        assertThat(foundTruck instanceof Truck).isTrue();
+        assertThat(foundBus).isInstanceOf(Bus.class);
+        assertThat(foundSubway).isInstanceOf(Subway.class);
+        assertThat(foundTruck).isInstanceOf(Truck.class);
 
         // 부모 클래스인 Vehicle 엔티티는 테이블로 생성되지 않는다.
-        assertThrows(PersistenceException.class,
-                () -> em.createNativeQuery("select * from Vehicle").getResultList());
+        assertThrows(PersistenceException.class, query::getResultList);
     }
 
 }

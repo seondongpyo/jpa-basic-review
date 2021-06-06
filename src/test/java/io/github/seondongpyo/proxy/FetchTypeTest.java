@@ -17,7 +17,7 @@ import io.github.seondongpyo.proxy.FootballClub;
 import io.github.seondongpyo.proxy.FootballPlayer;
 
 @DisplayName("즉시 로딩과 지연 로딩")
-public class FetchTypeTest {
+class FetchTypeTest {
 
 	private EntityManagerFactory emf;
 	private EntityManager em;

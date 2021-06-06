@@ -19,7 +19,7 @@ public class Profile {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Profile profile = (Profile) o;
+        var profile = (Profile) o;
         return Objects.equals(getEmail(), profile.getEmail()) && Objects.equals(getWebsite(), profile.getWebsite()) && Objects.equals(getTwitterUsername(), profile.getTwitterUsername());
     }
 

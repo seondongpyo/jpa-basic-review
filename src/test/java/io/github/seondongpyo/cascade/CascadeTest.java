@@ -23,7 +23,7 @@ import io.github.seondongpyo.cascade.remove.Hotel;
 import io.github.seondongpyo.cascade.remove.HotelReview;
 
 @DisplayName("영속성 전이(CASCADE)")
-public class CascadeTest {
+class CascadeTest {
 
 	private EntityManagerFactory emf;
 	private EntityManager em;

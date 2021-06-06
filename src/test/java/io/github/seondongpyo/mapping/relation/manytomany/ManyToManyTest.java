@@ -23,7 +23,7 @@ import io.github.seondongpyo.mapping.relation.manytomany.unidirectional.Bank;
 import io.github.seondongpyo.mapping.relation.manytomany.unidirectional.Client;
 
 @DisplayName("다대다(N:M) 연관관계 매핑")
-public class ManyToManyTest {
+class ManyToManyTest {
 
 	private EntityManagerFactory emf;
 	private EntityManager em;

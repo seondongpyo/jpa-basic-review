@@ -16,7 +16,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("객체와 테이블 매핑")
-public class EntityMappingTest {
+class EntityMappingTest {
 
 	private EntityManagerFactory emf;
 	private EntityManager em;
@@ -41,12 +41,14 @@ public class EntityMappingTest {
 		Person person = new Person("personA", 20);
 		em.persist(person);
 
-		// when
 		em.flush();
 		em.clear();
 
+		// when
+		Long id = person.getId();
+
 		// then
-		assertThrows(PersistenceException.class, () -> em.find(Person.class, person.getId()));
+		assertThrows(PersistenceException.class, () -> em.find(Person.class, id));
 	}
 
 	@Test

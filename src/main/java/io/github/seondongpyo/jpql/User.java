@@ -39,7 +39,7 @@ public class User {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
+        var user = (User) o;
         return getAge() == user.getAge() && Objects.equals(getId(), user.getId()) && Objects.equals(getGroup(), user.getGroup()) && Objects.equals(getName(), user.getName());
     }
 

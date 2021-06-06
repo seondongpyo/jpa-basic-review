@@ -16,7 +16,7 @@ import javax.persistence.Persistence;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("일대다(1:N) 연관관계 매핑")
-public class OneToManyTest {
+class OneToManyTest {
 
     private EntityManagerFactory emf;
     private EntityManager em;

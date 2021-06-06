@@ -13,7 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("@Transient")
-public class TransientTest {
+class TransientTest {
 
 	private EntityManagerFactory emf;
 	private EntityManager em;

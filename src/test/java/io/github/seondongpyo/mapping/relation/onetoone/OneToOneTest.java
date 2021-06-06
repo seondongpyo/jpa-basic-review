@@ -16,7 +16,7 @@ import javax.persistence.Persistence;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("일대일 연관관계 연관관계 매핑")
-public class OneToOneTest {
+class OneToOneTest {
 
     private EntityManagerFactory emf;
     private EntityManager em;

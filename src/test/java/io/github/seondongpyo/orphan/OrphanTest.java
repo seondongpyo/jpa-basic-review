@@ -14,7 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("고아 객체 (orphanRemoval)")
-public class OrphanTest {
+class OrphanTest {
 
 	private EntityManagerFactory emf;
 	private EntityManager em;
