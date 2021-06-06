@@ -1,5 +1,9 @@
 package io.github.seondongpyo.jpql;
 
+import io.github.seondongpyo.mapping.inheritance.joined.Album;
+import io.github.seondongpyo.mapping.inheritance.joined.Book;
+import io.github.seondongpyo.mapping.inheritance.joined.Item;
+import io.github.seondongpyo.mapping.inheritance.joined.Movie;
 import io.github.seondongpyo.mapping.relation.direction.unidirectional.Team;
 import io.github.seondongpyo.mapping.relation.onetomany.bidirectional.Airplane;
 import io.github.seondongpyo.mapping.relation.onetomany.bidirectional.Airport;
@@ -702,6 +706,29 @@ public class JpqlTest {
         for (Airplane airplane : foundAirport.getAirplanes()) {
             assertThat(Persistence.getPersistenceUtil().isLoaded(airplane)).isTrue();
         }
+    }
+
+    @DisplayName("다형성 쿼리")
+    @Test
+    void polymorphismQuery() {
+        // given
+        Movie movie = new Movie();
+        em.persist(movie);
+
+        Book book = new Book();
+        em.persist(book);
+
+        Album album = new Album();
+        em.persist(album);
+
+        // when
+        String query = "select i from Item i where type(i) in (Book, Movie)";
+        List<Item> items = em.createQuery(query, Item.class)
+                                .getResultList();
+
+        // then
+        assertThat(items).hasSize(2);
+        assertThat(items).hasOnlyElementsOfTypes(Book.class, Movie.class);
     }
 
 }
