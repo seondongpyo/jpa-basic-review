@@ -871,4 +871,25 @@ class JpqlTest {
         assertThat(users).hasSize(1);
     }
 
+    @DisplayName("Named 쿼리 - 어노테이션으로 사용하기")
+    @Test
+    void namedQuery() {
+        // given
+        User user1 = new User("Kim", 10);
+        User user2 = new User("Lee", 20);
+        User user3 = new User("Park", 30);
+        em.persist(user1);
+        em.persist(user2);
+        em.persist(user3);
+
+        // when
+        List<User> users = em.createNamedQuery("User.findByName", User.class)
+                                .setParameter("name", "Kim")
+                                .getResultList();
+
+        // then
+        assertThat(users).hasSize(1);
+        assertThat(users.get(0).getAge()).isEqualTo(10);
+    }
+
 }

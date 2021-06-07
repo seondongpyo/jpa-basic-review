@@ -9,6 +9,10 @@ import java.util.Objects;
 
 @Getter @Setter
 @NoArgsConstructor
+@NamedQuery(
+    name = "User.findByName",
+    query = "select u from User u where u.name = :name"
+)
 @Entity
 public class User {
 
