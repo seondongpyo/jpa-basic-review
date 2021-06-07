@@ -873,7 +873,7 @@ class JpqlTest {
 
     @DisplayName("Named 쿼리 - 어노테이션으로 사용하기")
     @Test
-    void namedQuery() {
+    void namedQueryByAnnotation() {
         // given
         User user1 = new User("Kim", 10);
         User user2 = new User("Lee", 20);
@@ -890,6 +890,30 @@ class JpqlTest {
         // then
         assertThat(users).hasSize(1);
         assertThat(users.get(0).getAge()).isEqualTo(10);
+    }
+
+    @DisplayName("Named 쿼리 - XML로 사용하기")
+    @Test
+    void namedQueryXML() {
+        // given
+        User user1 = new User("Kim", 20);
+        User user2 = new User("Kim", 30);
+        User user3 = new User("Park", 40);
+        em.persist(user1);
+        em.persist(user2);
+        em.persist(user3);
+
+        // when
+        List<User> users = em.createNamedQuery("User.findByUsername", User.class)
+                                .setParameter("name", "Kim")
+                                .getResultList();
+
+        Long count = em.createNamedQuery("User.totalCount", Long.class)
+                        .getSingleResult();
+
+        // then
+        assertThat(users).hasSize(2);
+        assertThat(count).isEqualTo(3);
     }
 
 }
